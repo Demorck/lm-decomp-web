@@ -9,35 +9,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap">
-  <script type="module" src="/src/main.ts"></script>
+  <script type="module" src="/src/main.tsx"></script>
 </head>
-  <body>
-  <header class="mx-auto flex flex-wrap items-end justify-between gap-x-8 gapy-y-4 px-4 pt-10 pb-8">
-    <div>
-      <h1 class="m-0 leading-none font-display  font-normal text-5xl sm:text-6xl">Luigi's Mansion</h1>
-      <p class="mt-3 mb-0 max-w-[50ch] text-moon-dim">Progress of the Gamecube decompilation. Rebuilt from the upstream CI after every merge</p>
-    </div>
-    <nav class="flex gap-5 text-sm font-semibold">
-      <a id="repo-link" href="https://github.com/SomeJakeGuy/lm-decomp">Source on github</a>
-      <a href="https://decomp.dev/SomeJakeGuy/lm-decomp">decomp.dev</a>
-    </nav>
-  </header>
-
-  <div class="mx-auto px-4">
-    <div id="version-tabs" class="grid grid-cols-2 border-b border-wall sm:flex sm:gap-x-1"></div>
-
-    <section class="pt-8">
-      <div class="mb-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-        <div id="legend" class="flex flex-wrap gap-x-5 gap-y-2 text-sm text-moon-dim">
-          <span class="inline-flex items-center gap-2"><i class="size-3.5 bg-green-200"></i>Linked</span>
-          <span class="inline-flex items-center gap-2"><i class="size-3.5 bg-green-500"></i>Matched</span>
-          <span class="inline-flex items-center gap-2"><i class="size-3.5 bg-amber-400"></i>Partly matched</span>
-          <span class="inline-flex items-center gap-2"><i class="size-3.5 bg-red-400"></i>Not split yet</span>
-        </div>
-      </div>
-
-      <div id="treemap" class="overflow-hidden relative border-4"></div>
-    </section>
-  </div>
+  <body class="bg-night font-sans text-base leading-relaxed text-moon antialiased">
+    <div id="root"></div>
   </body>
 </html>
