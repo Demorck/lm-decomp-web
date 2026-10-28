@@ -1,5 +1,5 @@
 // is it better to create type just for this ?
-import {formatBytes, formatDate, formatPercent, percent, timeAgo} from "../formats.ts";
+import {formatBytes, formatDate, formatInt, formatPercent, percent, timeAgo} from "../formats.ts";
 import type {Latest} from "../types.ts";
 
 /**
@@ -36,9 +36,9 @@ export function MeasureList({ latest, repo }: { latest: Latest; repo: string }) 
                 <Measure label="Data" part={m.matchedData} total={m.totalData}
                          detail={`${formatBytes(m.matchedData)} of ${formatBytes(m.totalData)}`} />
                 <Measure label="Functions" part={m.matchedFunctions} total={m.totalFunctions}
-                         detail={`${formatBytes(m.matchedFunctions)} of ${formatBytes(m.totalFunctions)}`} />
+                         detail={`${formatInt(m.matchedFunctions)} of ${formatInt(m.totalFunctions)}`} />
                 <Measure label="Linked files" part={m.completeUnits} total={m.totalUnits}
-                         detail={`${formatBytes(m.completeUnits)} of ${formatBytes(m.totalUnits)}`} />
+                         detail={`${formatInt(m.completeUnits)} of ${formatInt(m.totalUnits)}`} />
             </div>
             <p className="mt-6 mb-0 text-sm text-primary-accent">
                 Built from {" "}

@@ -17,6 +17,7 @@ export function Tabs({ versions, selected } : { versions: VersionSummary[]; sele
                     className="cursor-pointer px-4 py-3 text-left
                     text-primary hover:text-primary-accent aria-selected:text-primary-accent
                      border-0 border-b-2 border-transparent aria-selected:border-light"
+                    onClick={() => location.hash = version.id}
                 >
                     <span className="block font-semibold whitespace-nowrap">
                         {version.label}

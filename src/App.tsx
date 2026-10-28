@@ -86,8 +86,8 @@ export function App(): ReactElement {
                         from the upstream CI after every merge</p>
                 </div>
                 <nav className="flex gap-5 text-sm font-semibold">
-                    <a id="repo-link" href="https://github.com/SomeJakeGuy/lm-decomp">Source on github</a>
-                    <a href="https://decomp.dev/SomeJakeGuy/lm-decomp">decomp.dev</a>
+                    <a id="repo-link" href={repo}>Source on github</a>
+                    <a href={"https://decomp.dev/" + upstream}>decomp.dev</a>
                 </nav>
             </header>
 
