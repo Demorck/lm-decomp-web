@@ -2,6 +2,7 @@ import type {HistoryEntry, Index, Latest, VersionSummary} from "./types.ts";
 import {type ReactElement, useEffect, useState, useSyncExternalStore} from "react";
 import {Tabs} from "./modules/Tabs.tsx";
 import {MeasureList} from "./modules/MeasureList.tsx";
+import {formatPercent, percent} from "./formats.ts";
 
 interface Loaded {
     version: VersionSummary;
@@ -50,14 +51,16 @@ function loadVersion(id: string): Promise<[Latest, HistoryEntry[]]> {
 export function App(): ReactElement {
     const [index, setIndex] = useState<Index | null>(null);
     const [data, setData] = useState<Loaded | null>(null);
+    const [error, setError] = useState<string | null>(null);
     // const [query, setQuery] = useState("");
 
     const hash = useSyncExternalStore(subscribeHash, () => location.hash.slice(1));
     const version = index && (index.versions.find((v) => v.id === hash) ?? index.versions[0]);
 
     useEffect(() => {
-        getJson<Index>("data/index.json").then(setIndex);
-    }, []);
+        getJson<Index>("data/index.json").then(setIndex, () =>
+            setError("No progress data yet. Run the update workflow to fetch builds")
+        )}, []);
 
     useEffect(() => {
         if (!version) return;
@@ -67,7 +70,9 @@ export function App(): ReactElement {
         loadVersion(version.id).then(([latest, history]) => {
                 if (stale) return;
                 setData({version, latest, history});
-            }
+                setError(null);
+            },
+            () => !stale && setError(`The ${version.label} data could not be loaded. Try reloading the page.`),
         );
         return () => {
             stale = true;
@@ -77,6 +82,15 @@ export function App(): ReactElement {
     const upstream = index?.upstream ?? "SomeJakeGuy/lm-decomp";
     const repo = `https://github.com/${upstream}`;
     const decompLink = `https://decomp.dev/${upstream}`;
+
+    const m = data?.latest.measures;
+    const headline =
+        error ??
+        (!data || !m
+            ? "Loading..."
+            : m.matchedCode
+                ? `${formatPercent(percent(m.matchedCode, m.totalCode))} of the ${data.version.label} code is matched`
+                : `No ${data.version.label} code has been matched yet`);
 
     return (
         <>
@@ -96,6 +110,10 @@ export function App(): ReactElement {
                 <Tabs versions={index?.versions ?? []} selected={version?.id}/>
 
                 <section className="pt-8">
+                    <h2 id="headline"
+                        className="m-0 font-display text-xl sm:text-2xl">
+                        {headline}
+                    </h2>
                     <div className="mb-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
                         <div id="legend" className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-moon-dim">
                             <span className="inline-flex items-center gap-2"><i className="size-3.5 bg-green-200"></i>Linked</span>
