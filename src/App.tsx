@@ -3,6 +3,7 @@ import {type ReactElement, useEffect, useState, useSyncExternalStore} from "reac
 import {Tabs} from "./modules/Tabs.tsx";
 import {MeasureList} from "./modules/MeasureList.tsx";
 import {formatPercent, percent} from "./formats.ts";
+import {Categories} from "./modules/Categories.tsx";
 
 interface Loaded {
     version: VersionSummary;
@@ -18,7 +19,7 @@ const cache = new Map<string, Promise<[Latest, HistoryEntry[]]>>();
  * @param path Path of the file
  */
 async function getJson<T>(path: string): Promise<T> {
-    const res = await fetch(path, { cache: "no-cache" });
+    const res = await fetch(path, {cache: "no-cache"});
     if (!res.ok) throw new Error(`${res.status} on ${path}`);
 
     return await res.json() as Promise<T>;
@@ -60,7 +61,8 @@ export function App(): ReactElement {
     useEffect(() => {
         getJson<Index>("data/index.json").then(setIndex, () =>
             setError("No progress data yet. Run the update workflow to fetch builds")
-        )}, []);
+        )
+    }, []);
 
     useEffect(() => {
         if (!version) return;
@@ -125,19 +127,27 @@ export function App(): ReactElement {
 
                     <div id="treemap" className="overflow-hidden relative border-4"></div>
 
-                    { data && index &&
+                    {data && index &&
                         <>
-                            <MeasureList latest={data.latest} repo={repo} />
+                            <MeasureList latest={data.latest} repo={repo}/>
                         </>
                     }
                 </section>
+
+                { data &&
+                    <section className="mt-16">
+                        <h2 className="mt-0 mb-5 text-2xl">By Library</h2>
+                        <Categories latest={data.latest} />
+                    </section>
+                }
             </div>
 
 
             <footer className="mx-auto mt-16 border-t px-4 py-6 text-sm text-primary">
                 <p className="my-1">
                     Numbers come from the progress reports of the upstream{" "}
-                    <a className="underline text-primary hover:text-primary-accent" href={`${repo}/actions/workflows/build.yml`}>
+                    <a className="underline text-primary hover:text-primary-accent"
+                       href={`${repo}/actions/workflows/build.yml`}>
                         CI builds
                     </a>
                     , checked every hour (when the website and the CI are done).
