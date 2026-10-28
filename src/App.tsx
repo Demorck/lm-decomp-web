@@ -76,10 +76,11 @@ export function App(): ReactElement {
 
     const upstream = index?.upstream ?? "SomeJakeGuy/lm-decomp";
     const repo = `https://github.com/${upstream}`;
+    const decompLink = `https://decomp.dev/${upstream}`;
 
     return (
         <>
-            <header className="mx-auto flex flex-wrap items-end justify-between gap-x-8 gapy-y-4 px-4 pt-10 pb-8">
+            <header className="mx-auto flex flex-wrap items-end justify-between gap-x-8 gap-y-4 px-4 pt-10 pb-8">
                 <div>
                     <h1 className="m-0 leading-none font-display  font-normal text-5xl sm:text-6xl">Luigi's Mansion</h1>
                     <p className="mt-3 mb-0 max-w-[50ch] text-moon-dim">Progress of the Gamecube decompilation. Rebuilt
@@ -87,7 +88,7 @@ export function App(): ReactElement {
                 </div>
                 <nav className="flex gap-5 text-sm font-semibold">
                     <a id="repo-link" href={repo}>Source on github</a>
-                    <a href={"https://decomp.dev/" + upstream}>decomp.dev</a>
+                    <a href={decompLink}>decomp.dev</a>
                 </nav>
             </header>
 

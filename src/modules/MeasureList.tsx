@@ -13,7 +13,7 @@ function Measure({ label, part, total, detail }: { label: string; part: number; 
     return (
         <div>
             <div className="text-sm text-primary-accent">{ label }</div>
-            <div className="m-0 mt-0 5">
+            <div className="m-0">
                 <span className="text-2xl font-semibold tabular-nums">{ formatPercent(percent(part, total)) }</span>
                 <span className="block text-sm text-primary-accent tabular-nums">{ detail }</span>
             </div>
