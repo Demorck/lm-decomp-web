@@ -27,6 +27,10 @@ export function formatBytes(v: number): string {
     return `${v} B`;
 }
 
+export function formatInt(v: number): string {
+    return v.toLocaleString("en-GB");
+}
+
 /**
  * Format an ISO date in a readable way (11 Sept 2001)
  * @param iso The ISO date string

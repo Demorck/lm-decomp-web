@@ -1,6 +1,6 @@
 // is it better to create type just for this ?
-import {formatBytes, formatDate, formatPercent, percent, timeAgo} from "./formats.ts";
-import type {Latest} from "./types.ts";
+import {formatBytes, formatDate, formatPercent, percent, timeAgo} from "../formats.ts";
+import type {Latest} from "../types.ts";
 
 /**
  * One stat block: a label, the percentage and a detail under it

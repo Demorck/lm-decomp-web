@@ -1,5 +1,5 @@
-import type {VersionSummary} from "./types.ts";
-import {formatPercent, percent} from "./formats.ts";
+import type {VersionSummary} from "../types.ts";
+import {formatPercent, percent} from "../formats.ts";
 
 
 /**

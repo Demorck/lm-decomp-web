@@ -1,7 +1,7 @@
 import type {HistoryEntry, Index, Latest, VersionSummary} from "./types.ts";
 import {type ReactElement, useEffect, useState, useSyncExternalStore} from "react";
-import {Tabs} from "./Tabs.tsx";
-import {MeasureList} from "./MeasureList.tsx";
+import {Tabs} from "./modules/Tabs.tsx";
+import {MeasureList} from "./modules/MeasureList.tsx";
 
 interface Loaded {
     version: VersionSummary;
@@ -50,6 +50,7 @@ function loadVersion(id: string): Promise<[Latest, HistoryEntry[]]> {
 export function App(): ReactElement {
     const [index, setIndex] = useState<Index | null>(null);
     const [data, setData] = useState<Loaded | null>(null);
+    // const [query, setQuery] = useState("");
 
     const hash = useSyncExternalStore(subscribeHash, () => location.hash.slice(1));
     const version = index && (index.versions.find((v) => v.id === hash) ?? index.versions[0]);
@@ -105,7 +106,11 @@ export function App(): ReactElement {
 
                     <div id="treemap" className="overflow-hidden relative border-4"></div>
 
-                    { data && <MeasureList latest={data.latest} repo={repo} />}
+                    { data && index &&
+                        <>
+                            <MeasureList latest={data.latest} repo={repo} />
+                        </>
+                    }
                 </section>
             </div>
 
