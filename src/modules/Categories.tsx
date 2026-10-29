@@ -6,8 +6,8 @@ import {formatBytes, formatInt, formatPercent, percent} from "../formats.ts";
  * @param m Measures of one library
  */
 function LightBar({m}: { m: Measures }) {
-    const linked = percent(m.completeCode, m.totalCode)
-    const matched = percent(m.matchedCode, m.totalCode)
+    const linked = percent(m.completeCode, m.totalCode);
+    const matched = percent(m.matchedCode, m.totalCode);
     const fuzzy = Math.max(m.fuzzy, matched);
 
     return (
@@ -22,7 +22,6 @@ function LightBar({m}: { m: Measures }) {
 /**
  * One line per library (game, SDK, JSystem, etc.) with its code progress
  * @param latest data from `latest.json` of the selected version
- * @constructor
  */
 export function Categories({ latest }: { latest: Latest }) {
     const categories = latest.categories.filter(c => c.measures.totalCode > 0);
@@ -37,16 +36,16 @@ export function Categories({ latest }: { latest: Latest }) {
 
     return (
         <div className="space-y-5">
-            {categories.map(category => (
-                <div key={category.id}>
+            {categories.map(({ id, name, measures: m }) => (
+                <div key={id}>
                     <div className="mb-2 flex items-baseline justify-between gap-4">
-                        <span className="font-semibold">{category.name}</span>
-                        <span className="tabular-nums">{formatPercent(percent(category.measures.matchedCode, category.measures.totalCode))}</span>
+                        <span className="font-semibold">{name}</span>
+                        <span className="tabular-nums">{formatPercent(percent(m.matchedCode, m.totalCode))}</span>
                     </div>
-                    <LightBar m={category.measures}/>
+                    <LightBar m={m}/>
                     <div className="mt-1.5 text-sm text-primary-accent tabular-nums">
-                        {formatBytes(category.measures.matchedCode)} of {formatBytes(category.measures.totalCode)},{" "}
-                        {formatInt(category.measures.matchedFunctions)} of {formatInt(category.measures.totalFunctions)}
+                        {formatBytes(m.matchedCode)} of {formatBytes(m.totalCode)},{" "}
+                        {formatInt(m.matchedFunctions)} of {formatInt(m.totalFunctions)} functions
                     </div>
                 </div>
             ))}
