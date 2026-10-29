@@ -4,6 +4,7 @@ import {Tabs} from "./modules/Tabs.tsx";
 import {MeasureList} from "./modules/MeasureList.tsx";
 import {formatPercent, percent} from "./formats.ts";
 import {Categories} from "./modules/Categories.tsx";
+import {Builds} from "./modules/Builds.tsx";
 
 interface Loaded {
     version: VersionSummary;
@@ -96,7 +97,7 @@ export function App(): ReactElement {
 
     return (
         <>
-            <header className="mx-auto flex flex-wrap items-end justify-between gap-x-8 gap-y-4 px-4 pt-10 pb-8">
+            <header className="mx-auto flex flex-wrap items-end justify-between gap-x-8 gap-y-4 px-4 pt-10 p-8">
                 <div>
                     <h1 className="m-0 leading-none font-display  font-normal text-5xl sm:text-6xl">Luigi's Mansion</h1>
                     <p className="mt-3 mb-0 max-w-[50ch] text-moon-dim">Progress of the Gamecube decompilation. Rebuilt
@@ -111,7 +112,7 @@ export function App(): ReactElement {
             <div>
                 <Tabs versions={index?.versions ?? []} selected={version?.id}/>
 
-                <section className="pt-8">
+                <section className="p-8">
                     <h2 id="headline"
                         className="m-0 font-display text-xl sm:text-2xl">
                         {headline}
@@ -135,9 +136,16 @@ export function App(): ReactElement {
                 </section>
 
                 { data &&
-                    <section className="mt-16">
+                    <section className="mt-16 p-8">
                         <h2 className="mt-0 mb-5 text-2xl">By Library</h2>
                         <Categories latest={data.latest} />
+                    </section>
+                }
+
+                { data &&
+                    <section className="mt-16 p-8">
+                        <h2 className="mt-0 mb-5 text-2xl">Recent builds</h2>
+                        <Builds history={data.history} repo={repo} />
                     </section>
                 }
             </div>
