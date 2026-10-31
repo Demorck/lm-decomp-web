@@ -1,7 +1,8 @@
 import type {HistoryEntry, Measures} from "../types.ts";
-import {useMemo, useRef} from "react";
+import { type MouseEvent, useMemo, useRef, useState } from "react";
 import {useWidth} from "../hooks/useWidth.ts";
-import {formatShortDate, percent} from "../formats.ts";
+import { formatDate, formatPercent, formatShortDate, percent } from "../formats.ts";
+import { Tooltip, TooltipRow, TooltipTitle } from "./Tooltip.tsx";
 
 interface Series {
     label: string;
@@ -65,10 +66,26 @@ export function ChartLegend() {
     );
 }
 
+function BuildTooltip({entry, x, y}: {entry: HistoryEntry; x: number; y: number}) {
+    return (
+        <Tooltip x={x} y={y} >
+            <TooltipTitle>{entry.message}</TooltipTitle>
+            <div className="mb-1 text-xs text-primary-accent">{entry.author}, {formatDate(entry.date)}</div>
+            {SERIES.map(s => (
+                <TooltipRow
+                    key={s.label}
+                    label={<><span className={s.color}>•</span> {s.label} </>}
+                    value={formatPercent(s.get(entry.measures))} />
+            ))}
+        </Tooltip>
+    )
+}
+
 export function Chart({ history }: { history: HistoryEntry[] }) {
     const ref = useRef<HTMLDivElement>(null);
     const width = useWidth(ref);
     const {times, x, y, yTicks, xTicks} = useMemo(() => scales(history, width), [history, width]);
+    const [hover, setHover] = useState<{ index: number; x: number; y: number } | null>(null);
 
     const points = (s: Series) =>
         history.map((entry, i) => `${x(times[i])},${y(s.get(entry.measures))}`).join(" ");
@@ -80,6 +97,16 @@ export function Chart({ history }: { history: HistoryEntry[] }) {
         return "middle";
     };
 
+    function onMove(ev: MouseEvent<SVGRectElement>) {
+        const mouseX = ev.clientX - ref.current!.getBoundingClientRect().left;
+        let closest = 0;
+        for (let i = 1; i < times.length; i++) {
+            if (Math.abs(x(times[i]) - mouseX) < Math.abs(x(times[closest]) - mouseX)) closest = i;
+        }
+
+        setHover({index: closest, x: ev.clientX, y: ev.clientY});
+    }
+
     return (
         <div ref={ref} style={{ height: HEIGHT }}>
             {history.length === 0 ? (
@@ -87,35 +114,47 @@ export function Chart({ history }: { history: HistoryEntry[] }) {
                     No builds recorded for this version
                 </div>
             ) : width > 0 && (
-                <svg width={width} height={HEIGHT} className="block overflow-visible">
-                    <g className="stroke-primary/15">
-                        {yTicks.map((v) => (
-                            <line key={v} x1={PAD_CHART.left} x2={width - PAD_CHART.right} y1={y(v)} y2={y(v)}/>
-                        ))}
-                    </g>
-
-                    <g className="fill-primary-accent text-xs">
-                        {yTicks.map((v) => (
-                            <text key={v} x={PAD_CHART.left - 8} y={y(v) + 4} textAnchor="end">{v}%</text>
-                        ))}
-                        {xTicks.map((t, i) => (
-                            <text key={t} x={x(t)} y={HEIGHT - 6} textAnchor={anchor(i)}>
-                                {formatShortDate(t)}
-                            </text>
-                        ))}
-                    </g>
-
-                    {SERIES.map((s) => (
-                        <g key={s.label} className={s.color}>
-                            <polyline points={points(s)} fill="none" stroke="currentColor" strokeWidth={2}
-                                      strokeLinejoin="round"/>
-                            {history.length <= 40 && history.map((entry, i) => (
-                                <circle key={i} cx={x(times[i])} cy={y(s.get(entry.measures))} r={2.5}
-                                        fill="currentColor"/>
+                <>
+                    <svg width={width} height={HEIGHT} className="block overflow-visible">
+                        <g className="stroke-primary/15">
+                            {yTicks.map((v) => (
+                                <line key={v} x1={PAD_CHART.left} x2={width - PAD_CHART.right} y1={y(v)} y2={y(v)}/>
                             ))}
                         </g>
-                    ))}
-                </svg>
+
+                        <g className="fill-primary-accent text-xs">
+                            {yTicks.map((v) => (
+                                <text key={v} x={PAD_CHART.left - 8} y={y(v) + 4} textAnchor="end">{v}%</text>
+                            ))}
+                            {xTicks.map((t, i) => (
+                                <text key={t} x={x(t)} y={HEIGHT - 6} textAnchor={anchor(i)}>
+                                    {formatShortDate(t)}
+                                </text>
+                            ))}
+                        </g>
+
+                        {SERIES.map((s) => (
+                            <g key={s.label} className={s.color}>
+                                <polyline points={points(s)} fill="none" stroke="currentColor" strokeWidth={2}
+                                          strokeLinejoin="round"/>
+                                {history.length <= 40 && history.map((entry, i) => (
+                                    <circle key={i} cx={x(times[i])} cy={y(s.get(entry.measures))} r={2.5}
+                                            fill="currentColor"/>
+                                ))}
+                            </g>
+                        ))}
+
+                        {hover && (
+                            <line x1={x(times[hover.index])} x2={x(times[hover.index])}
+                                  y1={PAD_CHART.top} y2={HEIGHT - PAD_CHART.bottom}
+                                  strokeDasharray="3 3" className="stroke-primary-accent"/>
+                        )}
+
+                        <rect x={PAD_CHART.left} y={0} width={width - PAD_CHART.left - PAD_CHART.right} height={HEIGHT}
+                        fill="transparent" onMouseMove={onMove} onMouseLeave={() => setHover(null)} />
+                    </svg>
+                    {hover && <BuildTooltip entry={history[hover.index]} x={hover.x} y={hover.y}/>}
+                </>
             )}
         </div>
     );

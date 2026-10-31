@@ -145,10 +145,10 @@ export function App(): ReactElement {
 
                         <section className="p-8">
                             <div className="mb-5 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
-                                <h2 className="mt-0 mb-5 text-2xl">Over time</h2>
+                                <h2 className="mt-0 text-2xl">Over time</h2>
                                 <ChartLegend />
                             </div>
-                            <Chart history={data.history} />
+                            <Chart key={data.version.id} history={data.history} />
                         </section>
                     </div>
                 }
