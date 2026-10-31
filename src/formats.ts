@@ -39,7 +39,7 @@ export function formatDate(iso: string): string {
     return new Date(iso).toLocaleDateString("en-GB", {day: "numeric", month: "short", year: "numeric"});
 }
 
-export function formatShortDate(iso: string): string {
+export function formatShortDate(iso: string | number): string {
     return new Date(iso).toLocaleDateString("en-GB", {day: "numeric", month: "short"});
 }
 
