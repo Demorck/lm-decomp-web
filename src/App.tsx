@@ -5,6 +5,7 @@ import {MeasureList} from "./modules/MeasureList.tsx";
 import {formatPercent, percent} from "./formats.ts";
 import {Categories} from "./modules/Categories.tsx";
 import {Builds} from "./modules/Builds.tsx";
+import { Chart } from "./modules/Chart.tsx";
 
 interface Loaded {
     version: VersionSummary;
@@ -136,10 +137,17 @@ export function App(): ReactElement {
                 </section>
 
                 { data &&
-                    <section className="mt-16 p-8">
-                        <h2 className="mt-0 mb-5 text-2xl">By Library</h2>
-                        <Categories latest={data.latest} />
-                    </section>
+                    <div className={"mt-16 grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"}>
+                        <section className="mt-16 p-8">
+                            <h2 className="mt-0 mb-5 text-2xl">By Library</h2>
+                            <Categories latest={data.latest} />
+                        </section>
+
+                        <section className="mt-16 p-8">
+                            <h2 className="mt-0 mb-5 text-2xl">Over time</h2>
+                            <Chart history={data.history} />
+                        </section>
+                    </div>
                 }
 
                 { data &&
