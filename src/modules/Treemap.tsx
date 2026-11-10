@@ -76,6 +76,10 @@ function layout(latest: Latest, width: number, height: number): Wing[] {
     });
 }
 
+/**
+  * Status of a file in the words of the legend
+  * @param unit The source file
+  */
 function unitStatus(unit: Unit): string {
     if (unit.auto) return "Not split yet";
     if (unit.complete) return "Linked";
@@ -84,6 +88,12 @@ function unitStatus(unit: Unit): string {
     return `Partly Matched`;
 }
 
+/**
+  * Tooltip of one room with file name, status, percent and how much of it matches
+  * @param unit The file under the cursor
+  * @param x Cursor x in the viewport
+  * @param y Cursor y in the viewport
+  */
 function UnitTooltip({unit, x, y}: {unit: Unit; x: number; y: number }) {
     return (
         <Tooltip x={x} y={y}>
