@@ -56,7 +56,7 @@ export function App(): ReactElement {
     const [index, setIndex] = useState<Index | null>(null);
     const [data, setData] = useState<Loaded | null>(null);
     const [error, setError] = useState<string | null>(null);
-    // const [query, setQuery] = useState("");
+    const [query, setQuery] = useState("");
 
     const hash = useSyncExternalStore(subscribeHash, () => location.hash.slice(1));
     const version = index && (index.versions.find((v) => v.id === hash) ?? index.versions[0]);
@@ -121,11 +121,20 @@ export function App(): ReactElement {
                     </h2>
                     <div className="mb-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
                         <TreemapLegend />
+                        <input
+                            type="search"
+                            placeholder={"Find a file"}
+                            value={query}
+                            onChange={event => setQuery(event.target.value)}
+                            className={"w-full max-w-60 border-0 border-b-2 border-primary/20 " +
+                                "bg-transparent px-0 py-1 text-sm placeholder:text-primary-accent " +
+                                "focus:border-light focus:outline-none"}
+                        />
                     </div>
 
                     {data && index &&
                         <>
-                            <Treemap latest={data.latest}/>
+                            <Treemap latest={data.latest} query={query}/>
                             <MeasureList latest={data.latest} repo={repo}/>
                         </>
                     }

@@ -95,19 +95,21 @@ export function TreemapLegend() {
  * well it matches
  * @param latest Data from `latest.json` of the selected version
  */
-export function Treemap({ latest }: { latest: Latest }) {
+export function Treemap({ latest, query }: { latest: Latest; query: string }) {
     const ref = useRef<HTMLDivElement>(null);
     const width = useWidth(ref);
     // never under 360px so the small rooms stay visible
     const height = Math.max(360, Math.round(width * 0.55));
     const wings = useMemo(() => layout(latest, width, height), [latest, width, height]);
+    const search = query.trim().toLowerCase();
+    const matches = (unit: Unit) => !search || unit.name.toLowerCase().includes(search);
 
     return (
         <div ref={ref} className="relative overflow-hidden bg-primary/20" style={{ height }}>
             {wings.map((wing) => (
                 <Fragment key={wing.key}>
                     {wing.rooms.map(({item: {unit}, x, y, w, h}) => (
-                        <div key={unit.name} className="absolute"
+                        <div key={unit.name} className={`absolute transition-opacity ${matches(unit) ? '' : 'opacity-15'}`}
                              style={{
                                  left: x,
                                  top: y,
