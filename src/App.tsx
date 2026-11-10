@@ -6,6 +6,7 @@ import {formatPercent, percent} from "./formats.ts";
 import {Categories} from "./modules/Categories.tsx";
 import {Builds} from "./modules/Builds.tsx";
 import {Chart, ChartLegend} from "./modules/Chart.tsx";
+import { Treemap, TreemapLegend } from "./modules/Treemap.tsx";
 
 interface Loaded {
     version: VersionSummary;
@@ -119,18 +120,12 @@ export function App(): ReactElement {
                         {headline}
                     </h2>
                     <div className="mb-3 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
-                        <div id="legend" className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-moon-dim">
-                            <span className="inline-flex items-center gap-2"><i className="size-3.5 bg-green-200"></i>Linked</span>
-                            <span className="inline-flex items-center gap-2"><i className="size-3.5 bg-green-500"></i>Matched</span>
-                            <span className="inline-flex items-center gap-2"><i className="size-3.5 bg-amber-400"></i>Partly matched</span>
-                            <span className="inline-flex items-center gap-2"><i className="size-3.5 bg-red-400"></i>Not split yet</span>
-                        </div>
+                        <TreemapLegend />
                     </div>
-
-                    <div id="treemap" className="overflow-hidden relative border-4"></div>
 
                     {data && index &&
                         <>
+                            <Treemap latest={data.latest}/>
                             <MeasureList latest={data.latest} repo={repo}/>
                         </>
                     }

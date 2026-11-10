@@ -23,6 +23,16 @@ function worstRatio(sum: number, max: number, min: number, side: number): number
     );
 }
 
+/**
+ * Squarified treemap (Bruls, Huizing and van Wijk): split a rectangle into one rectangle per item, each with an
+ * area proportional to its value and a shape as close to a square as possible
+ * @param items Items to place, with a value above 0, sorted from the biggest value to the smallest
+ * @param x Left of the rectangle to fill
+ * @param y Top of the rectangle to fill
+ * @param w Width of the rectangle to fill
+ * @param h Height of the rectangle to fill
+ * @returns One rectangle per item in the same order,empty when there is nothing to place or no room
+ */
 export function squarify<T extends { value: number }>(
     items: T[], x: number, y: number, w: number, h: number
 ): Rect<T>[] {
