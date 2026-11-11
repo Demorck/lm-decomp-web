@@ -87,6 +87,7 @@ export function App(): ReactElement {
     const upstream = index?.upstream ?? "SomeJakeGuy/lm-decomp";
     const repo = `https://github.com/${upstream}`;
     const decompLink = `https://decomp.dev/${upstream}`;
+    const webrepo= "https://github.com/Demorck/lm-decomp-web";
 
     const m = data?.latest.measures;
     const headline =
@@ -106,7 +107,8 @@ export function App(): ReactElement {
                         from the upstream CI after every merge</p>
                 </div>
                 <nav className="flex gap-5 text-sm font-semibold">
-                    <a id="repo-link" href={repo}>Source on github</a>
+                    <a href={webrepo}>Source for this site</a>
+                    <a id="repo-link" href={repo}>Decomp source on github</a>
                     <a href={decompLink}>decomp.dev</a>
                 </nav>
             </header>
