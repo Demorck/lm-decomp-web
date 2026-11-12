@@ -1,8 +1,8 @@
-import type {HistoryEntry, Index, Latest, VersionSummary} from "./types.ts";
+import type { HistoryEntry, Index, Latest, Measures, VersionSummary } from "./types.ts";
 import {type ReactElement, useEffect, useState, useSyncExternalStore} from "react";
 import {Tabs} from "./modules/Tabs.tsx";
 import {MeasureList} from "./modules/MeasureList.tsx";
-import {formatPercent, percent} from "./formats.ts";
+import { formatPercent, numberWithCommas, percent } from "./formats.ts";
 import {Categories} from "./modules/Categories.tsx";
 import {Builds} from "./modules/Builds.tsx";
 import {Chart, ChartLegend} from "./modules/Chart.tsx";
@@ -47,6 +47,56 @@ function loadVersion(id: string): Promise<[Latest, HistoryEntry[]]> {
     }
 
     return cache.get(id)!;
+}
+
+/**
+ * Calculate the rank based on the amount and the max amount
+ * @param amount Gold
+ * @param max_amount Max gold
+ * @returns The rank
+ */
+function rank(amount: number, max_amount: number): string {
+    let cur_rank = "K";
+    if (amount == max_amount)
+        cur_rank = "S"
+    else if (amount >= 100000000)
+        cur_rank = "A"
+    else if (amount >= 70000000)
+        cur_rank = "B"
+    else if (amount >= 60000000)
+        cur_rank = "C"
+    else if (amount >= 50000000)
+        cur_rank = "D"
+    else if (amount >= 40000000)
+        cur_rank = "E"
+    else if (amount >= 20000000)
+        cur_rank = "F"
+    else if (amount >= 5000000)
+        cur_rank = "G"
+    else if (amount >= 5000)
+        cur_rank = "H"
+
+    return cur_rank
+}
+
+/**
+ * The progress string that Rolo did
+ * @param m The current measure
+ */
+function progressPrint(m: Measures | undefined): string {
+    if (m === undefined) return ""
+    const code_frag = m.completeCode / m.totalCode;
+    const data_frag = m.completeData / m.totalData;
+
+    const number_ghost = 23;
+    const ghost = Math.floor(code_frag * number_ghost);
+
+    const number_gold = 142390000;
+    const gold = Math.floor(data_frag * number_gold);
+
+    return "You captured " + ghost + " out of " + number_ghost + " portrait ghosts and obtained "
+        + numberWithCommas(gold) + " out of " + numberWithCommas(number_gold) + " gold " +
+        "(Rank " + rank(gold, number_gold) + ")";
 }
 
 /**
@@ -117,6 +167,9 @@ export function App(): ReactElement {
                 <Tabs versions={index?.versions ?? []} selected={version?.id}/>
 
                 <section className="p-8">
+                    <h3>
+                        {progressPrint(m)}
+                    </h3>
                     <h2 id="headline"
                         className="m-0 font-display text-xl sm:text-2xl">
                         {headline}
