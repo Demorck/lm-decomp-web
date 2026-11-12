@@ -9,6 +9,9 @@
   --color-primary-accent: #8db08e;
   --color-light: #f2b544;
   --color-light-bright: #ffe7a6;
+
+  --color-room: #172036;
+  --color-wall: #2a3550;
 }
 
 @layer base {
@@ -19,5 +22,34 @@
   :focus-visible {
     outline: 2px solid #fff;
     outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .lamp {
+    animation: light-on 0.7s ease-out backwards;
+  }
+
+  .lamp-cleared {
+    box-shadow: inset 0 0 10px 1px var(--color-light);
+  }
+
+  .dots {
+    background-image: radial-gradient(var(--color-wall) 1px, transparent 1.2px);
+    background-size: 6px 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lamp {
+      animation: none;
+    }
+  }
+}
+
+
+@keyframes light-on {
+  from {
+    background-color: var(--color-room);
+    box-shadow: none;
   }
 }

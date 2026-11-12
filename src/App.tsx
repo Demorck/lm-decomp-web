@@ -136,7 +136,12 @@ export function App(): ReactElement {
 
                     {data && index &&
                         <>
-                            <Treemap latest={data.latest} query={query} sourceBase={`${repo}/blob/${index.branch}/`}/>
+                            <Treemap
+                                key={data.version.id}
+                                latest={data.latest}
+                                query={query}
+                                sourceBase={`${repo}/blob/${index.branch}/`}
+                            />
                             <MeasureList latest={data.latest} repo={repo}/>
                         </>
                     }

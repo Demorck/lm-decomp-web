@@ -9,10 +9,10 @@ const WALL = 1;
 const WING_WALL = 3;
 
 const LEGEND = [
-    {label: "Linked", swatch: "size-3.5 bg-green-200"},
-    {label: "Matched", swatch: "size-3.5 bg-green-500"},
-    {label: "Partly matched", swatch: "h-3.5 w-10 bg-linear-to-r from-night to-amber-400"},
-    {label: "Not split yet", swatch: "size-3.5 bg-red-400"},
+    {label: "Linked", swatch: "lamp-cleared size-3.5 bg-light-bright"},
+    {label: "Matched", swatch: "size-3.5 bg-light"},
+    {label: "Partly matched", swatch: "h-3.5 w-10 bg-linear-to-r from-room to-light/55"},
+    {label: "Not split yet", swatch: "dots size-3.5 border border-wall bg-night"},
 ];
 
 interface Wing {
@@ -30,11 +30,17 @@ interface Wing {
  * @param unit The source file
  */
 function roomColor(unit: Unit): string {
-    if (unit.auto) return "var(--color-red-400)";
-    if (unit.complete) return "var(--color-green-200)";
-    if (unit.matchedCode >= unit.totalCode) return "var(--color-green-500)";
+    if (unit.auto) return "var(--color-night)";
+    if (unit.complete) return "var(--color-light-bright)";
+    if (unit.matchedCode >= unit.totalCode) return "var(--color-light)";
 
-    return `color-mix(in oklab, var(--color-amber-400) ${unit.fuzzy.toFixed(0)}%, var(--color-night))`;
+    return `color-mix(in oklab, var(--color-light) ${(unit.fuzzy * 0.55).toFixed(0)}%, var(--color-room))`;
+}
+
+function lampClass(unit: Unit): string {
+    if (unit.auto) return "dots";
+
+    return unit.complete ? "lamp lamp-cleared" : "lamp";
 }
 
 /**
@@ -143,13 +149,13 @@ export function Treemap({ latest, query, sourceBase }: { latest: Latest; query: 
     const matches = (unit: Unit) => !search || unit.name.toLowerCase().includes(search);
 
     return (
-        <div ref={ref} className="relative overflow-hidden bg-primary/20" style={{ height }} onMouseLeave={() => setHover(null)}>
+        <div ref={ref} className="relative overflow-hidden bg-wall" style={{ height }} onMouseLeave={() => setHover(null)}>
             {wings.map((wing) => (
                 <Fragment key={wing.key}>
                     {wing.rooms.map(({item: {unit}, x, y, w, h}) => (
                         <a key={unit.name} href={unit.source ? sourceBase + unit.source : undefined}
                             target="_blank" rel="noreferrer"
-                            className={`absolute transition-opacity hover:z-10 hover:outline-2 hover:-outline-offset-2
+                            className={`absolute transition-opacity ${lampClass(unit)} hover:z-10 hover:outline-2 hover:-outline-offset-2
                                 hover:outline-primary ${matches(unit) ? "" : "opacity-15"}`}
                             onMouseMove={(ev) => setHover({unit, x: ev.clientX, y: ev.clientY})}
                              style={{
@@ -158,6 +164,7 @@ export function Treemap({ latest, query, sourceBase }: { latest: Latest; query: 
                                  width: Math.max(0, w - WALL),
                                  height: Math.max(0, h - WALL),
                                  backgroundColor: roomColor(unit),
+                                 animationDelay: `${((x + y) / (width + height)) * 1.2}s`,
                              }}
                         />
                     ))}

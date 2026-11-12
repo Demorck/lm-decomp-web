@@ -12,9 +12,9 @@ function LightBar({m}: { m: Measures }) {
 
     return (
         <div className="flex h-1.5 bg-primary/10">
-            <span className="bg-green-200" style={{ width: `${linked}%` }}></span>
-            <span className="bg-green-500" style={{ width: `${matched - linked}%` }}></span>
-            <span className="bg-amber-400" style={{ width: `${fuzzy - matched}%` }}></span>
+            <span className="bg-light-bright" style={{ width: `${linked}%` }}></span>
+            <span className="bg-light" style={{ width: `${matched - linked}%` }}></span>
+            <span className="bg-light/35" style={{ width: `${fuzzy - matched}%` }}></span>
         </div>
     )
 }
