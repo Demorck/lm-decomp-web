@@ -1,21 +1,21 @@
 {
-  "compilerOptions": {
-    "target": "es2023",
-    "module": "esnext",
-    "lib": ["ES2023", "DOM", "DOM.Iterable"],
-    "types": ["node", "vite/client"],
-    "skipLibCheck": true,
-    "jsx": "react-jsx",
+    "compilerOptions": {
+        "target": "es2023",
+        "module": "esnext",
+        "lib": ["ES2023", "DOM", "DOM.Iterable"],
+        "types": ["node", "vite/client"],
+        "skipLibCheck": true,
+        "jsx": "react-jsx",
 
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "noEmit": true,
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": true,
+        "noEmit": true,
 
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
-  },
-  "include": ["src", "scripts", "vite.config.ts"]
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "erasableSyntaxOnly": true,
+        "noFallthroughCasesInSwitch": true
+    },
+    "include": ["src", "scripts", "vite.config.ts"]
 }

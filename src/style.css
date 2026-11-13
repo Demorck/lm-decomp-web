@@ -1,158 +1,182 @@
 @import "tailwindcss";
 
 @theme {
-  --font-display: "IM Fell English", Georgia, serif;
-  --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-pixel: "VT323", ui-monospace, monospace;
+    --font-display: "IM Fell English", Georgia, serif;
+    --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-pixel: "VT323", ui-monospace, monospace;
 
-  --color-night: #0f1626;
-  --color-primary: #cee5c6;
-  --color-primary-accent: #8db08e;
-  --color-light: #f2b544;
-  --color-light-bright: #ffe7a6;
+    --color-night: #0f1626;
+    --color-primary: #cee5c6;
+    --color-primary-accent: #8db08e;
+    --color-light: #f2b544;
+    --color-light-bright: #ffe7a6;
 
-  --color-room: #172036;
-  --color-wall: #2a3550;
+    --color-room: #172036;
+    --color-wall: #2a3550;
 
-  --color-gbh: #4b5468;
-  --color-gbh-bezel: #232a38;
-  --color-gbh-button: #8a2f4a;
-  --color-lcd: #9bbc0f;
-  --color-lcd-ink: #0f380f;
-  --color-lcd-dim: #306230;
+    --color-gbh: #4b5468;
+    --color-gbh-bezel: #232a38;
+    --color-gbh-button: #8a2f4a;
+    --color-lcd: #9bbc0f;
+    --color-lcd-ink: #0f380f;
+    --color-lcd-dim: #306230;
 
-  --animate-vibrate: vibrate 0.15s linear infinite;
-  --animate-ecto-shake: ecto-shake 0.25s linear infinite;
+    --animate-vibrate: vibrate 0.15s linear infinite;
+    --animate-ecto-shake: ecto-shake 0.25s linear infinite;
 }
 
 @layer base {
-  :root {
-    color-scheme: dark;
-  }
+    :root {
+        color-scheme: dark;
+    }
 
-  :focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: 2px;
-  }
+    :focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+    }
 }
 
 @layer components {
-  /* TREEMAP */
-  .lamp {
-    animation: light-on 0.7s ease-out backwards;
-  }
-
-  .lamp-cleared {
-    box-shadow: inset 0 0 10px 1px var(--color-light);
-  }
-
-  .dots {
-    background-image: radial-gradient(var(--color-wall) 1px, transparent 1.2px);
-    background-size: 6px 6px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
+    /* TREEMAP */
     .lamp {
-      animation: none;
+        animation: light-on 0.7s ease-out backwards;
     }
-  }
 
-  /* BARS */
-  .ecto-drain {
-    background-image: repeating-linear-gradient(
+    .lamp-cleared {
+        box-shadow: inset 0 0 10px 1px var(--color-light);
+    }
+
+    .dots {
+        background-image: radial-gradient(var(--color-wall) 1px, transparent 1.2px);
+        background-size: 6px 6px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .lamp {
+            animation: none;
+        }
+    }
+
+    /* BARS */
+    .ecto-drain {
+        background-image: repeating-linear-gradient(
             -65deg,
             currentColor 0,
             currentColor 4px,
             transparent 4px,
             transparent 12px
-    );
-    background-size: 24px 100%;
-    mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.1) 0%, #000 100%);
-    animation: suck-left 0.4s linear infinite;
-  }
+        );
+        background-size: 24px 100%;
+        mask-image: linear-gradient(90deg, rgb(0 0 0 / 0.1) 0%, #000 100%);
+        animation: suck-left 0.4s linear infinite;
+    }
 
-  .ecto-tail {
-    background: linear-gradient(
-            90deg,
-            color-mix(in oklab, currentColor 40%, transparent),
-            currentColor 80%
-    );
+    .ecto-tail {
+        background: linear-gradient(90deg, color-mix(in oklab, currentColor 40%, transparent), currentColor 80%);
 
-    clip-path: polygon(0% 25%, 100% 0%, 100% 100%, 0% 75%);
-  }
+        clip-path: polygon(0% 25%, 100% 0%, 100% 100%, 0% 75%);
+    }
 
-  .ecto-glow {
-    filter: drop-shadow(0 0 5px currentColor);
-  }
+    .ecto-glow {
+        filter: drop-shadow(0 0 5px currentColor);
+    }
 
-  /* TOOLTIP */
-  .lcd {
-    background-color: var(--color-lcd);
-    background-image: repeating-linear-gradient(
-        0deg,
-        color-mix(in oklab, var(--color-lcd-ink) 20%, transparent) 0 1px,
-        transparent 2px 3px
-    );
-    box-shadow: inset 0 0 20px rgb(0 0 0 / 0.35);
-  }
+    /* TOOLTIP */
+    .lcd {
+        background-color: var(--color-lcd);
+        background-image: repeating-linear-gradient(
+            0deg,
+            color-mix(in oklab, var(--color-lcd-ink) 20%, transparent) 0 1px,
+            transparent 2px 3px
+        );
+        box-shadow: inset 0 0 20px rgb(0 0 0 / 0.35);
+    }
 
-  .flashlight {
-    background: radial-gradient(
+    .flashlight {
+        background: radial-gradient(
             circle at var(--x) var(--y),
             color-mix(in oklab, var(--color-light-bright) 12%, transparent) 0,
             transparent 90px,
             color-mix(in oklab, var(--color-night) 75%, transparent) 220px
-    );
-  }
+        );
+    }
 }
 
-
 @keyframes suck-left {
-  from { background-position: 24px 0; }
-  to { background-position: 0 0; }
+    from {
+        background-position: 24px 0;
+    }
+    to {
+        background-position: 0 0;
+    }
 }
 
 @keyframes suck-in {
-  from { background-position: 24px 0; }
-  to { background-position: 0 0; }
+    from {
+        background-position: 24px 0;
+    }
+    to {
+        background-position: 0 0;
+    }
 }
 
 @keyframes light-on {
-  from {
-    background-color: var(--color-room);
-    box-shadow: none;
-  }
+    from {
+        background-color: var(--color-room);
+        box-shadow: none;
+    }
 }
 
 @keyframes vibrate {
-  0%, 100% { transform: translate(0, 0) rotate(0deg); }
-  25% { transform: translate(-0.5px, 0.5px) rotate(-1deg); }
-  50% { transform: translate(0.5px, -0.5px) rotate(0deg); }
-  75% { transform: translate(-0.5px, -0.5px) rotate(1deg); }
+    0%,
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+    25% {
+        transform: translate(-0.5px, 0.5px) rotate(-1deg);
+    }
+    50% {
+        transform: translate(0.5px, -0.5px) rotate(0deg);
+    }
+    75% {
+        transform: translate(-0.5px, -0.5px) rotate(1deg);
+    }
 }
 
 @keyframes ecto-shake {
-  0%, 100% { transform: translate(0, 0); }
-  20% { transform: translate(-1.5px, 0.5px); }
-  40% { transform: translate(0.5px, -0.5px); }
-  60% { transform: translate(-1px, 0px); }
-  80% { transform: translate(1px, 0.5px); }
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    20% {
+        transform: translate(-1.5px, 0.5px);
+    }
+    40% {
+        transform: translate(0.5px, -0.5px);
+    }
+    60% {
+        transform: translate(-1px, 0px);
+    }
+    80% {
+        transform: translate(1px, 0.5px);
+    }
 }
 
 @keyframes ghost-struggle {
-  0%, 100% {
-    transform: skewX(0deg) scaleY(1);
-  }
-  20% {
-    transform: skewX(-14deg) scaleY(0.95);
-  }
-  40% {
-    transform: skewX(12deg) scaleY(1.03);
-  }
-  60% {
-    transform: skewX(-7deg) scaleY(0.98);
-  }
-  80% {
-    transform: skewX(4deg) scaleY(1.01);
-  }
+    0%,
+    100% {
+        transform: skewX(0deg) scaleY(1);
+    }
+    20% {
+        transform: skewX(-14deg) scaleY(0.95);
+    }
+    40% {
+        transform: skewX(12deg) scaleY(1.03);
+    }
+    60% {
+        transform: skewX(-7deg) scaleY(0.98);
+    }
+    80% {
+        transform: skewX(4deg) scaleY(1.01);
+    }
 }

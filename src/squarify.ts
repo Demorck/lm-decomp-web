@@ -17,10 +17,7 @@ export interface Rect<T> {
  * @param side Length of the side the row
  */
 function worstRatio(sum: number, max: number, min: number, side: number): number {
-    return Math.max(
-        (side * side * max) / (sum * sum),
-        (sum * sum) / (side * side * min)
-    );
+    return Math.max((side * side * max) / (sum * sum), (sum * sum) / (side * side * min));
 }
 
 /**
@@ -34,7 +31,11 @@ function worstRatio(sum: number, max: number, min: number, side: number): number
  * @returns One rectangle per item in the same order,empty when there is nothing to place or no room
  */
 export function squarify<T extends { value: number }>(
-    items: T[], x: number, y: number, w: number, h: number
+    items: T[],
+    x: number,
+    y: number,
+    w: number,
+    h: number,
 ): Rect<T>[] {
     const total = items.reduce((sum, item) => sum + item.value, 0);
     const result: Rect<T>[] = [];
@@ -63,8 +64,8 @@ export function squarify<T extends { value: number }>(
         let offset = 0;
         for (let j = i; j < end; j++) {
             const length = areas[j] / thickness;
-            if (w >= h) result.push({item: items[j], x, y: y + offset, w: thickness, h: length});
-            else result.push({item: items[j], x: x + offset, y, w: length, h: thickness});
+            if (w >= h) result.push({ item: items[j], x, y: y + offset, w: thickness, h: length });
+            else result.push({ item: items[j], x: x + offset, y, w: length, h: thickness });
 
             offset += length;
         }

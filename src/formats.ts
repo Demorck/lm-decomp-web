@@ -36,14 +36,14 @@ export function formatInt(v: number): string {
  * @param iso The ISO date string
  */
 export function formatDate(iso: string): string {
-    return new Date(iso).toLocaleDateString("en-GB", {day: "numeric", month: "short", year: "numeric"});
+    return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
 export function formatShortDate(iso: string | number): string {
-    return new Date(iso).toLocaleDateString("en-GB", {day: "numeric", month: "short"});
+    return new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short" });
 }
 
-const rtf = new Intl.RelativeTimeFormat("en", {numeric: "auto"});
+const rtf = new Intl.RelativeTimeFormat("en", { numeric: "auto" });
 
 // Each step is how many of the current unit we need before switching to the next one
 // (60 seconds -> 1 minute, 24 hours -> 1 day...). Month is approximated to 30 days

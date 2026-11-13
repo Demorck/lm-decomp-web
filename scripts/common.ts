@@ -1,8 +1,8 @@
-import {fileURLToPath} from "node:url";
-import {mkdir, readFile, writeFile} from "node:fs/promises";
-import {dirname} from "node:path";
-import {inflateRawSync} from "node:zlib";
-import type {Measures, Unit} from "../src/types.ts";
+import { fileURLToPath } from "node:url";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { dirname } from "node:path";
+import { inflateRawSync } from "node:zlib";
+import type { Measures, Unit } from "../src/types.ts";
 
 export const DATA_DIR: string = fileURLToPath(new URL("../public/data/", import.meta.url));
 
@@ -16,13 +16,13 @@ export const VERSIOSN = [
 export type ReportMeasures = Partial<Record<string, number | string>>;
 type ReportCategorie = { id: string; name: string; measures: ReportMeasures };
 type UnitMetadata = {
-    source_path?: string,
-    progress_categories?: string[],
-    auto_generated?: boolean,
-    complete?: boolean
+    source_path?: string;
+    progress_categories?: string[];
+    auto_generated?: boolean;
+    complete?: boolean;
 };
-type Commit = { timestamp: string; message: string; author: { name: string }};
-type ReportUnit = { name: string; measures?: ReportMeasures, metadata?: UnitMetadata };
+type Commit = { timestamp: string; message: string; author: { name: string } };
+type ReportUnit = { name: string; measures?: ReportMeasures; metadata?: UnitMetadata };
 
 export interface Report {
     measures: ReportMeasures;
@@ -44,7 +44,7 @@ export interface Artifact {
 
 const token = process.env.GITHUB_TOKEN;
 if (!token) {
-    console.error("GITHUB_TOKEN is required.")
+    console.error("GITHUB_TOKEN is required.");
     process.exit(1);
 }
 
@@ -55,10 +55,10 @@ if (!token) {
 export async function githubFetch(path: string): Promise<Response> {
     const res = await fetch(`https://api.github.com/${path}`, {
         headers: {
-            Accept: 'application/vnd.github+json',
+            Accept: "application/vnd.github+json",
             Authorization: `Bearer ${token}`,
-            "X-GitHub-Api-Version": "2022-11-28" // I could use 2026-03-10, need to test though
-        }
+            "X-GitHub-Api-Version": "2022-11-28", // I could use 2026-03-10, need to test though
+        },
     });
 
     if (!res.ok) throw new Error(`Github API ${res.status} on ${path} ${await res.text()}`);
@@ -75,7 +75,7 @@ export async function readJson<T>(file: string, fallback: T): Promise<T> {
     try {
         return JSON.parse(await readFile(file, "utf8")) as T;
     } catch (error) {
-        if ((error as NodeJS.ErrnoException).code === "ENOENT") return fallback
+        if ((error as NodeJS.ErrnoException).code === "ENOENT") return fallback;
 
         throw error;
     }
@@ -90,7 +90,6 @@ export async function writeJson(pathFile: string, value: unknown): Promise<void>
     await mkdir(dirname(pathFile), { recursive: true });
     await writeFile(pathFile, JSON.stringify(value) + "\n");
 }
-
 
 const END_OF_CENTRAL_DIR_SIGNATURE = 0x06054b50;
 const END_OF_CENTRAL_DIR_MIN_SIZE = 22;
@@ -114,12 +113,12 @@ export function readZipEntry(buf: Buffer, name: string): Buffer {
 
     // Loop in entries to find the file
     for (let i = 0; i < entries_count; i++) {
-        const compression           = buf.readUInt16LE(central_dir_offset + 10);
-        const size                  = buf.readUInt32LE(central_dir_offset + 20);
-        const filename_length       = buf.readUInt16LE(central_dir_offset + 28);
-        const extra_field_length    = buf.readUInt16LE(central_dir_offset + 30);
-        const file_comment_length   = buf.readUInt16LE(central_dir_offset + 32);
-        const local_header_offset   = buf.readUInt32LE(central_dir_offset + 42);
+        const compression = buf.readUInt16LE(central_dir_offset + 10);
+        const size = buf.readUInt32LE(central_dir_offset + 20);
+        const filename_length = buf.readUInt16LE(central_dir_offset + 28);
+        const extra_field_length = buf.readUInt16LE(central_dir_offset + 30);
+        const file_comment_length = buf.readUInt16LE(central_dir_offset + 32);
+        const local_header_offset = buf.readUInt32LE(central_dir_offset + 42);
 
         const file_name_start = central_dir_offset + 46;
         const file_name = buf.toString("utf8", file_name_start, file_name_start + filename_length);
@@ -127,7 +126,9 @@ export function readZipEntry(buf: Buffer, name: string): Buffer {
         // yeaaah, found the file
         if (file_name === name) {
             // Offset calcul
-            const dataStart = local_header_offset + 30 +
+            const dataStart =
+                local_header_offset +
+                30 +
                 buf.readUInt16LE(local_header_offset + 26) +
                 buf.readUInt16LE(local_header_offset + 28);
 
@@ -193,7 +194,7 @@ export async function listRuns(repo: string, afterRun = 0): Promise<Run[]> {
         const res = await githubFetch(`repos/${repo}/actions/workflows/build.yml/runs?${query_params}`);
         const { workflow_runs: batch } = (await res.json()) as { workflow_runs: Run[] };
 
-        const fresh = batch.filter(r => r.id > afterRun);
+        const fresh = batch.filter((r) => r.id > afterRun);
         runs.push(...fresh);
 
         if (batch.length < 100 || fresh.length < batch.length) break;

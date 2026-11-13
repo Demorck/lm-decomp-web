@@ -1,20 +1,22 @@
 import {
-    compact, compactUnit,
+    compact,
+    compactUnit,
     DATA_DIR,
     fetchReport,
     listReportArtifacts,
     listRuns,
     readJson,
     runCommit,
-    VERSIOSN, writeJson
+    VERSIOSN,
+    writeJson,
 } from "./common.ts";
-import type {HistoryEntry, Index, Latest} from "../src/types.ts";
+import type { HistoryEntry, Index, Latest } from "../src/types.ts";
 
 const UPSTREAM = process.env.UPSTREAM_REPO || "SomeJakeGuy/lm-decomp";
 const BRANCH = "main";
 
 async function main(): Promise<void> {
-    const indexFile = `${DATA_DIR}index.json`
+    const indexFile = `${DATA_DIR}index.json`;
     const index = await readJson<Pick<Index, "lastRun">>(indexFile, { lastRun: 0 });
     const runs = await listRuns(UPSTREAM, index.lastRun);
 
@@ -23,13 +25,12 @@ async function main(): Promise<void> {
     const histories: Record<string, HistoryEntry[]> = {};
     const latest: Record<string, Latest> = {};
 
-    for (const v of VERSIOSN)
-        histories[v.id] = await readJson<HistoryEntry[]>(`${DATA_DIR}${v.id}/history.json`, []);
+    for (const v of VERSIOSN) histories[v.id] = await readJson<HistoryEntry[]>(`${DATA_DIR}${v.id}/history.json`, []);
 
     for (const run of runs) {
         const artifacts = await listReportArtifacts(UPSTREAM, run);
         for (const v of VERSIOSN) {
-            const currentArtifactVersion = artifacts.find(a => a.name === `${v.id}_report`);
+            const currentArtifactVersion = artifacts.find((a) => a.name === `${v.id}_report`);
             if (!currentArtifactVersion) continue;
 
             const report = await fetchReport(UPSTREAM, currentArtifactVersion);
@@ -38,19 +39,21 @@ async function main(): Promise<void> {
             histories[v.id].push({
                 ...commit,
                 measures: compact(report.measures),
-                categories: Object.fromEntries((report.categories ?? []).map(c => [c.id, compact(c.measures)]))
+                categories: Object.fromEntries((report.categories ?? []).map((c) => [c.id, compact(c.measures)])),
             });
 
             latest[v.id] = {
                 ...commit,
                 measures: compact(report.measures),
-                categories: (report.categories ?? [])
-                    .map(c => ({ id: c.id, name: c.name, measures: compact(c.measures)})),
-                units: report.units.map(compactUnit).filter(u => u.totalCode > 0)
+                categories: (report.categories ?? []).map((c) => ({
+                    id: c.id,
+                    name: c.name,
+                    measures: compact(c.measures),
+                })),
+                units: report.units.map(compactUnit).filter((u) => u.totalCode > 0),
             };
         }
     }
-
 
     for (const v of VERSIOSN) {
         await writeJson(`${DATA_DIR}${v.id}/history.json`, histories[v.id]);
@@ -61,7 +64,7 @@ async function main(): Promise<void> {
         upstream: UPSTREAM,
         branch: BRANCH,
         lastRun: runs[runs.length - 1].id,
-        versions: VERSIOSN.map(v => {
+        versions: VERSIOSN.map((v) => {
             const last = histories[v.id].at(-1);
 
             return { ...v, date: last?.date ?? null, sha: last?.sha ?? null, measures: last?.measures ?? null };
@@ -70,6 +73,5 @@ async function main(): Promise<void> {
 
     await writeJson(indexFile, newIndex);
 }
-
 
 await main();

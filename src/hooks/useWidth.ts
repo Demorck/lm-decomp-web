@@ -1,4 +1,4 @@
-import {type RefObject, useLayoutEffect, useState} from "react";
+import { type RefObject, useLayoutEffect, useState } from "react";
 
 /**
  * Inner wifth of an element updated each time the element is resied
@@ -16,7 +16,7 @@ export function useWidth(ref: RefObject<HTMLElement | null>): number {
 
         const observer = new ResizeObserver(() => setWidth(element.clientWidth));
         observer.observe(element);
-        return () => observer.disconnect()
+        return () => observer.disconnect();
     }, [ref]);
 
     return width;

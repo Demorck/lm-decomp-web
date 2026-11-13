@@ -1,6 +1,12 @@
 {
     "printWidth": 120,
     "tabWidth": 4,
-    "plugins": ["prettier-plugin-tailwindcss"],
-    "tailwindStylesheet": "./src/style.css"
+    "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-classnames", "prettier-plugin-merge"],
+    "tailwindStylesheet": "./src/style.css",
+    "overrides": [
+        {
+            "files": "*.tsx",
+            "options": { "tabWidth": 2 }
+        }
+    ]
 }
