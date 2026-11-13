@@ -233,8 +233,11 @@ export function App(): ReactElement {
                        href={`${repo}/actions/workflows/build.yml`}>
                         CI builds
                     </a>
-                    , checked every hour (when the website and the CI are done).
+                    , checked every hour.
                     Fan project, not affiliated with Nintendo.
+                </p>
+                <p className="my-1">
+                    Thanks to ThePlayerRolo and SomeJakeGuy. For what ? I don't know but thank you to them
                 </p>
             </footer>
         </>
