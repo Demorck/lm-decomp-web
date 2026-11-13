@@ -3,6 +3,7 @@
 @theme {
   --font-display: "IM Fell English", Georgia, serif;
   --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-pixel: "VT323", ui-monospace, monospace;
 
   --color-night: #0f1626;
   --color-primary: #cee5c6;
@@ -12,6 +13,13 @@
 
   --color-room: #172036;
   --color-wall: #2a3550;
+
+  --color-gbh: #4b5468;
+  --color-gbh-bezel: #232a38;
+  --color-gbh-button: #8a2f4a;
+  --color-lcd: #9bbc0f;
+  --color-lcd-ink: #0f380f;
+  --color-lcd-dim: #306230;
 
   --animate-vibrate: vibrate 0.15s linear infinite;
   --animate-ecto-shake: ecto-shake 0.25s linear infinite;
@@ -29,6 +37,7 @@
 }
 
 @layer components {
+  /* TREEMAP */
   .lamp {
     animation: light-on 0.7s ease-out backwards;
   }
@@ -48,7 +57,7 @@
     }
   }
 
-
+  /* BARS */
   .ecto-drain {
     background-image: repeating-linear-gradient(
             -65deg,
@@ -76,6 +85,25 @@
     filter: drop-shadow(0 0 5px currentColor);
   }
 
+  /* TOOLTIP */
+  .lcd {
+    background-color: var(--color-lcd);
+    background-image: repeating-linear-gradient(
+        0deg,
+        color-mix(in oklab, var(--color-lcd-ink) 20%, transparent) 0 1px,
+        transparent 2px 3px
+    );
+    box-shadow: inset 0 0 20px rgb(0 0 0 / 0.35);
+  }
+
+  .flashlight {
+    background: radial-gradient(
+            circle at var(--x) var(--y),
+            color-mix(in oklab, var(--color-light-bright) 12%, transparent) 0,
+            transparent 90px,
+            color-mix(in oklab, var(--color-night) 75%, transparent) 220px
+    );
+  }
 }
 
 
