@@ -1,9 +1,10 @@
 import { type Rect, squarify } from "../squarify.ts";
 import type { Latest, Unit } from "../types.ts";
-import { Fragment, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useWidth } from "../hooks/useWidth.ts";
 import { Tooltip, TooltipRow, TooltipTitle } from "./Tooltip.tsx";
 import { formatBytes, formatInt, formatPercent, percent } from "../formats.ts";
+import { MARIO_SOUNDS } from "../assets/sounds.ts";
 
 const WALL = 1;
 const WING_WALL = 3;
@@ -147,6 +148,16 @@ export function Treemap({ latest, query, sourceBase }: { latest: Latest; query: 
 
     const search = query.trim().toLowerCase();
     const matches = (unit: Unit) => !search || unit.name.toLowerCase().includes(search);
+    const callingMario = search === "mario";
+
+    useEffect(() => {
+        if (!callingMario) return;
+
+        const randomInt = Math.floor(Math.random() * MARIO_SOUNDS.length)
+        const audio = new Audio(MARIO_SOUNDS[randomInt]);
+            audio.play().catch(() => {});
+        return () => audio.pause();
+    }, [callingMario]);
 
     return (
         <div ref={ref} className="relative overflow-hidden bg-wall" style={{ height }} onMouseLeave={() => setHover(null)}>
@@ -178,6 +189,13 @@ export function Treemap({ latest, query, sourceBase }: { latest: Latest; query: 
                 </Fragment>
             ))}
             {hover && <UnitTooltip unit={hover.unit} x={hover.x} y={hover.y}/>}
+            {callingMario && (
+                <p className="pointer-events-none absolute inset-0 m-0 grid
+                    animate-pulse place-items-center font-display text-5xl text-light-bright"
+                   >
+                    Mario... ?
+                </p>
+            )}
         </div>
     );
 }
